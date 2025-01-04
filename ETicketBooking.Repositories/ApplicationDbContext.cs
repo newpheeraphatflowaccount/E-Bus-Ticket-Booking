@@ -21,6 +21,7 @@ namespace ETicketBooking.Repositories
 		public DbSet<Employee> Employees { get; set; }
 		public DbSet<Student> Students { get; set; }
 		public DbSet<Subject> Subjects { get; set; }
+		public DbSet<UserInfo> UserInfos { get; set; }
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			modelBuilder.Entity<StudentSubject>().HasKey(x => new { x.SubjectId, x.StudentId }); 

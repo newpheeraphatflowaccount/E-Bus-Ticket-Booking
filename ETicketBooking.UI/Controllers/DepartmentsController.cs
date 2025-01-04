@@ -16,17 +16,21 @@ namespace ETicketBooking.UI.Controllers
 
 		public async Task<IActionResult> Index()
 		{
-			List<DepartmentViewModel> departmentViewModels = new List<DepartmentViewModel>();
-			var departments = await _departmentRepo.GetAll();
-			foreach (var department in departments)
+			if (HttpContext.Session.GetInt32("userId") != null)
 			{
-				departmentViewModels.Add(new DepartmentViewModel
+				List<DepartmentViewModel> departmentViewModels = new List<DepartmentViewModel>();
+				var departments = await _departmentRepo.GetAll();
+				foreach (var department in departments)
 				{
-					Id = department.Id,
-					Name = department.Name
-				});
+					departmentViewModels.Add(new DepartmentViewModel
+					{
+						Id = department.Id,
+						Name = department.Name
+					});
+				}
+				return View(departmentViewModels);
 			}
-			return View(departmentViewModels);
+			return RedirectToAction("Login", "Auth");
 		}
 
 		[HttpGet]
