@@ -1,5 +1,6 @@
 ﻿using ETicketBooking.Entities;
 using ETicketBooking.Repositories.Interfaces;
+using ETicketBooking.UI.ViewModels.EmployeeViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -18,8 +19,18 @@ namespace ETicketBooking.UI.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+			List<EmployeeViewModel> employeeViewModels = new List<EmployeeViewModel>();
 			var employees = await _employeeRepo.GetAll();
-			return View(employees);
+			foreach (var item in employees)
+			{
+				employeeViewModels.Add(new EmployeeViewModel
+				{
+					Id=item.Id,
+					Name=item.Name,
+					DepartmentName=item.Department.Name
+				});
+			}
+			return View(employeeViewModels);
 		}
 
 		[HttpGet]
@@ -31,8 +42,13 @@ namespace ETicketBooking.UI.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Create(Employee employee)
+		public async Task<IActionResult> Create(CreateEmployeeViewModel vm)
 		{
+			var employee = new Employee
+			{
+				Name = vm.Name,
+				DepartmentId = vm.DepartmentId
+			};
 			await _employeeRepo.Insert(employee);
 			return RedirectToAction("Index");
 		}
@@ -41,14 +57,27 @@ namespace ETicketBooking.UI.Controllers
 		public async Task<IActionResult> Edit(int id)
 		{
 			var employee = await _employeeRepo.GetById(id);
+			var vm = new EditEmployeeViewModel
+			{
+				Id = employee.Id,
+				Name = employee.Name,
+				DepartmentId = employee.DepartmentId
+			};
+
 			var department = await _departmentRepo.GetAll();
 			ViewBag.departmentsList = new SelectList(department, "Id", "Name");
-			return View(employee);
+			return View(vm);
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Edit(Employee employee)
+		public async Task<IActionResult> Edit(EditEmployeeViewModel vm)
 		{
+			var employee = new Employee
+			{
+				Id = vm.Id,
+				Name = vm.Name,
+				DepartmentId = vm.DepartmentId
+			};
 			await _employeeRepo.Update(employee);
 			return RedirectToAction("Index");
 		}

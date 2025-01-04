@@ -18,8 +18,17 @@ namespace ETicketBooking.UI.Controllers
 
 		public async Task<IActionResult> Index()
 		{
+			List<StudentListViewModel> studentListViewModels = new List<StudentListViewModel>();
 			var students = await _studentRepo.GetAll();
-			return View(students);
+			foreach (var student in students)
+			{
+				studentListViewModels.Add(new StudentListViewModel
+				{
+					Id = student.Id,
+					Name = student.Name
+				});
+			}
+			return View(studentListViewModels);
 		}
 
 		[HttpGet]
