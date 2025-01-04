@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ETicketBooking.Entities;
 using ETicketBooking.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ETicketBooking.Repositories.Implementations
 {
@@ -17,34 +18,33 @@ namespace ETicketBooking.Repositories.Implementations
 			_context = context;
 		}
 
-		public void Delete(int id)
+		public async Task Delete(int id)
 		{
-			var department = GetById(id);
+			var department = await GetById(id);
 			_context.Departments.Remove(department);
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 
-		public Department GetById(int id)
+		public async Task<Department> GetById(int id)
 		{
-			return _context.Departments.FirstOrDefault(x => x.Id == id);
+			return await _context.Departments.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		public IEnumerable<Department> GetAll()
+		public async Task<IEnumerable<Department>> GetAll()
 		{
-			var departments = _context.Departments.ToList();
-			return departments;
+			return await _context.Departments.ToListAsync();
 		}
 
-		public void Insert(Department department)
+		public async Task Insert(Department department)
 		{
-			_context.Departments.Add(department);
-			_context.SaveChanges();
+			await _context.Departments.AddAsync(department);
+			await _context.SaveChangesAsync();
 		}
 
-		public void Update(Department department)
+		public async Task Update(Department department)
 		{
 			_context.Departments.Update(department);
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 	}
 }

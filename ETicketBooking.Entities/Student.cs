@@ -12,6 +12,8 @@ namespace ETicketBooking.Entities
 		public int Id { get; set; }
 		public string Name { get; set; }
 		// Navigation Property
+		public Address Address { get; set; }
+		// Navigation Property
 		public ICollection<StudentSubject> StudentSubjects { get; set; } = 
 			new List<StudentSubject>();
 	}

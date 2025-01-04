@@ -9,10 +9,10 @@ namespace ETicketBooking.Repositories.Interfaces
 {
 	public interface IEmployeeRepo
 	{
-		IEnumerable<Employee> GetAll();
-		Employee GetById(int id);
-		void Insert(Employee employee);
-		void Update(Employee employee);
-		void Delete(int id);
+		Task<IEnumerable<Employee>> GetAll();
+		Task<Employee> GetById(int id);
+		Task Insert(Employee employee);
+		Task Update(Employee employee);
+		Task Delete(int id);
 	}
 }

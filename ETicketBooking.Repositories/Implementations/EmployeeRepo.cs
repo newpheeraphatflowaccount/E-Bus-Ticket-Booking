@@ -18,34 +18,33 @@ namespace ETicketBooking.Repositories.Implementations
 			_context = context;
 		}
 
-		public void Delete(int id)
+		public async Task Delete(int id)
 		{
-			var employee = GetById(id);
+			var employee = await GetById(id);
 			_context.Employees.Remove(employee);
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 
-		public Employee GetById(int id)
+		public async Task<Employee> GetById(int id)
 		{
-			return _context.Employees.FirstOrDefault(x => x.Id == id);
+			return await _context.Employees.FirstOrDefaultAsync(x => x.Id == id);
 		}
 
-		public IEnumerable<Employee> GetAll()
+		public async Task<IEnumerable<Employee>> GetAll()
 		{
-			var employees = _context.Employees.Include(x => x.Department).ToList();
-			return employees;
+			return await _context.Employees.Include(x => x.Department).ToListAsync();
 		}
 
-		public void Insert(Employee employee)
+		public async Task Insert(Employee employee)
 		{
-			_context.Employees.Add(employee);
-			_context.SaveChanges();
+			await _context.Employees.AddAsync(employee);
+			await _context.SaveChangesAsync();
 		}
 
-		public void Update(Employee employee)
+		public async Task Update(Employee employee)
 		{
 			_context.Employees.Update(employee);
-			_context.SaveChanges();
+			await _context.SaveChangesAsync();
 		}
 	}
 }

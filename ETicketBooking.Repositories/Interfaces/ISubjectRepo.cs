@@ -9,10 +9,10 @@ namespace ETicketBooking.Repositories.Interfaces
 {
 	public interface ISubjectRepo
 	{
-		IEnumerable<Subject> GetAll();
-		Subject GetById(int id);
-		void Insert(Subject subject);
-		void Update(Subject subject);
-		void Delete(int id);
+		Task<IEnumerable<Subject>> GetAll();
+		Task<Subject> GetById(int id);
+		Task Insert(Subject subject);
+		Task Update(Subject subject);
+		Task Delete(int id);
 	}
 }

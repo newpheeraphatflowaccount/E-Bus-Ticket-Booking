@@ -1,13 +1,13 @@
-﻿@model IEnumerable<Department>
+﻿@model IEnumerable<ETicketBooking.Entities.Subject>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Department List</h1>
+<h1>Subject List</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-info">Create New Department</a>
+    <a asp-action="Create" class="btn btn-info">Create New Subject</a>
 </p>
 <table class="table">
     <thead>
@@ -32,6 +32,7 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
                 @Html.ActionLink("Delete", "Delete", new { id=item.Id })
             </td>
         </tr>
