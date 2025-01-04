@@ -13,9 +13,9 @@ namespace ETicketBooking.UI.Controllers
 			_departmentRepo = departmentRepo;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var departments = _departmentRepo.GetAll();
+			var departments = await _departmentRepo.GetAll();
 			return View(departments);
 		}
 
@@ -26,30 +26,30 @@ namespace ETicketBooking.UI.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Create(Department department)
+		public async Task<IActionResult> Create(Department department)
 		{
-			_departmentRepo.Insert(department);
+			await _departmentRepo.Insert(department);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			var department = _departmentRepo.GetById(id);
+			var department = await _departmentRepo.GetById(id);
 			return View(department);
 		}
 
 		[HttpPost]
-		public IActionResult Edit(Department department)
+		public async Task<IActionResult> Edit(Department department)
 		{
-			_departmentRepo.Update(department);
+			await _departmentRepo.Update(department);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			_departmentRepo.Delete(id);
+			await _departmentRepo.Delete(id);
 			return RedirectToAction("Index");
 		}
 	}

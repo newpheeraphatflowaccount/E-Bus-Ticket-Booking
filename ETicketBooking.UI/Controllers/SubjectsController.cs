@@ -14,43 +14,43 @@ namespace ETicketBooking.UI.Controllers
 			_subjectRepo = subjectRepo;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var subjects = _subjectRepo.GetAll();
+			var subjects = await _subjectRepo.GetAll();
 			return View(subjects);
 		}
 
 		[HttpGet]
-		public IActionResult Create()
+		public async Task<IActionResult> Create()
 		{
 			return View();
 		}
 
 		[HttpPost]
-		public IActionResult Create(Subject subject)
+		public async Task<IActionResult> Create(Subject subject)
 		{
-			_subjectRepo.Insert(subject);
+			await _subjectRepo.Insert(subject);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			var subject = _subjectRepo.GetById(id);
+			var subject = await _subjectRepo.GetById(id);
 			return View(subject);
 		}
 
 		[HttpPost]
-		public IActionResult Edit(Subject subject)
+		public async Task<IActionResult> Edit(Subject subject)
 		{
-			_subjectRepo.Update(subject);
+			await _subjectRepo.Update(subject);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			_subjectRepo.Delete(id);
+			await _subjectRepo.Delete(id);
 			return RedirectToAction("Index");
 		}
 	}

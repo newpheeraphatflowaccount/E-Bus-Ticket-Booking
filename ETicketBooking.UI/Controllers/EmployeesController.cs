@@ -16,47 +16,47 @@ namespace ETicketBooking.UI.Controllers
 			_departmentRepo = departmentRepo;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var employees = _employeeRepo.GetAll();
+			var employees = await _employeeRepo.GetAll();
 			return View(employees);
 		}
 
 		[HttpGet]
-		public IActionResult Create()
+		public async Task<IActionResult> Create()
 		{
-			var department = _departmentRepo.GetAll();
+			var department = await _departmentRepo.GetAll();
 			ViewBag.departmentsList = new SelectList(department, "Id", "Name");
 			return View();
 		}
 
 		[HttpPost]
-		public IActionResult Create(Employee employee)
+		public async Task<IActionResult> Create(Employee employee)
 		{
-			_employeeRepo.Insert(employee);
+			await _employeeRepo.Insert(employee);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			var employee = _employeeRepo.GetById(id);
-			var department = _departmentRepo.GetAll();
+			var employee = await _employeeRepo.GetById(id);
+			var department = await _departmentRepo.GetAll();
 			ViewBag.departmentsList = new SelectList(department, "Id", "Name");
 			return View(employee);
 		}
 
 		[HttpPost]
-		public IActionResult Edit(Employee employee)
+		public async Task<IActionResult> Edit(Employee employee)
 		{
-			_employeeRepo.Update(employee);
+			await _employeeRepo.Update(employee);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			_employeeRepo.Delete(id);
+			await _employeeRepo.Delete(id);
 			return RedirectToAction("Index");
 		}
 	}

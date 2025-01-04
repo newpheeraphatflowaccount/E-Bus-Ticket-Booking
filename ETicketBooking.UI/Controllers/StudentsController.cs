@@ -16,16 +16,16 @@ namespace ETicketBooking.UI.Controllers
 			_subjectRepo = subjectRepo;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index()
 		{
-			var students = _studentRepo.GetAll();
+			var students = await _studentRepo.GetAll();
 			return View(students);
 		}
 
 		[HttpGet]
-		public IActionResult Create()
+		public async Task<IActionResult> Create()
 		{
-			var subjects = _subjectRepo.GetAll();
+			var subjects = await _subjectRepo.GetAll();
 			var vm = new CreateStudentViewModel();
 			foreach (var subject in subjects)
 			{
@@ -40,7 +40,7 @@ namespace ETicketBooking.UI.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Create(CreateStudentViewModel vm)
+		public async Task<IActionResult> Create(CreateStudentViewModel vm)
 		{
 			var student = new Student
 			{
@@ -54,17 +54,17 @@ namespace ETicketBooking.UI.Controllers
 					SubjectId = subjectId
 				});
 			}
-			_studentRepo.Insert(student);
+			await _studentRepo.Insert(student);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Edit(int id)
+		public async Task<IActionResult> Edit(int id)
 		{
-			var student = _studentRepo.GetById(id);
+			var student = await _studentRepo.GetById(id);
 			var existingSubjectIds = student.StudentSubjects.Select(x => x.SubjectId).ToList();
 
-			var subjects = _subjectRepo.GetAll();
+			var subjects = await _subjectRepo.GetAll();
 			var vm = new StudentViewModel();
 			vm.Name = student.Name;
 			vm.Id = student.Id;
@@ -82,9 +82,9 @@ namespace ETicketBooking.UI.Controllers
 		}
 
 		[HttpPost]
-		public IActionResult Edit(StudentViewModel vm)
+		public async Task<IActionResult> Edit(StudentViewModel vm)
 		{
-			var student = _studentRepo.GetById(vm.Id);
+			var student = await _studentRepo.GetById(vm.Id);
 			var existingSubjectIds = student.StudentSubjects.Select(x => x.SubjectId).ToList();
 			student.Name = vm.Name;
 
@@ -106,14 +106,14 @@ namespace ETicketBooking.UI.Controllers
 					SubjectId = subjectId
 				});
 			}
-			_studentRepo.Update(student);
+			await _studentRepo.Update(student);
 			return RedirectToAction("Index");
 		}
 
 		[HttpGet]
-		public IActionResult Delete(int id)
+		public async Task<IActionResult> Delete(int id)
 		{
-			_studentRepo.Delete(id);
+			await _studentRepo.Delete(id);
 			return RedirectToAction("Index");
 		}
 	}
