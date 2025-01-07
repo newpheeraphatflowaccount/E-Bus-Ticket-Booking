@@ -53,6 +53,7 @@ namespace ETicketBooking.UI.Controllers
 				if (record > 0)
 				{
 					TempData["success"] = "Record Inserted";
+					return RedirectToAction("Index");
 				}
 				else
 				{
@@ -60,7 +61,7 @@ namespace ETicketBooking.UI.Controllers
 					return View();
 				}
 			}
-			return RedirectToAction("Index");
+			return View();
 		}
 
 		[HttpGet]
