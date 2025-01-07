@@ -10,6 +10,8 @@ namespace ETicketBooking.UI.ViewModels
 	{
 		public int Id { get; set; }
 		public string Name { get; set; }
+		public string? ProfileImage { get; set; }
+		public IFormFile? ImagePath { get; set; }
 		public List<CheckBoxTable> SubjectList { get; set; } = new List<CheckBoxTable>();
 	}
 

@@ -13,6 +13,7 @@ namespace ETicketBooking.Entities
 		public string Name { get; set; }
 		// Navigation Property
 		public Address Address { get; set; }
+		public string? ProfileImageUrl { get; set; }
 		// Navigation Property
 		public ICollection<StudentSubject> StudentSubjects { get; set; } = 
 			new List<StudentSubject>();

@@ -9,6 +9,7 @@ namespace ETicketBooking.UI.ViewModels
 	public class CreateStudentViewModel
 	{
 		public string Name { get; set; }
+		public IFormFile ImagePath { get; set; }
 		public List<CheckBoxTable> SubjectList { get; set; } = new List<CheckBoxTable>();
 	}
 }
