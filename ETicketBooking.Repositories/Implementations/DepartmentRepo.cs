@@ -35,10 +35,15 @@ namespace ETicketBooking.Repositories.Implementations
 			return await _context.Departments.ToListAsync();
 		}
 
-		public async Task Insert(Department department)
+		public async Task<int> Insert(Department department)
 		{
-			await _context.Departments.AddAsync(department);
-			await _context.SaveChangesAsync();
+			int record = 0;
+			if (department != null)
+			{
+				await _context.Departments.AddAsync(department);
+				record = await _context.SaveChangesAsync();
+			}
+			return record;
 		}
 
 		public async Task Update(Department department)

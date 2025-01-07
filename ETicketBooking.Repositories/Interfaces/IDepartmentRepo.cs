@@ -11,7 +11,7 @@ namespace ETicketBooking.Repositories.Interfaces
 	{
 		Task<IEnumerable<Department>> GetAll();
 		Task<Department> GetById(int id);
-		Task Insert(Department department);
+		Task<int> Insert(Department department);
 		Task Update(Department department);
 		Task Delete(int id);
 	}

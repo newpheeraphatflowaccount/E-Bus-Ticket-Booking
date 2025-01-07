@@ -42,11 +42,24 @@ namespace ETicketBooking.UI.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Create(CreateDepartmentViewModel vm)
 		{
-			var department = new Department
+			if (ModelState.IsValid)
 			{
-				Name = vm.Name
-			};
-			await _departmentRepo.Insert(department);
+				var department = new Department
+				{
+					Name = vm.Name
+				};
+				var record = await _departmentRepo.Insert(department);
+
+				if (record > 0)
+				{
+					TempData["success"] = "Record Inserted";
+				}
+				else
+				{
+					TempData["error"] = "Record not Inserted";
+					return View();
+				}
+			}
 			return RedirectToAction("Index");
 		}
 
