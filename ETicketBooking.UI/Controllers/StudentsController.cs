@@ -9,11 +9,14 @@ namespace ETicketBooking.UI.Controllers
 	{
 		private readonly IStudentRepo _studentRepo;
 		private readonly ISubjectRepo _subjectRepo;
+		private string StudentImage = "StudentImage";
+		private IUtilityRepo _utilityRepo;
 
-		public StudentsController(IStudentRepo studentRepo, ISubjectRepo subjectRepo)
+		public StudentsController(IStudentRepo studentRepo, ISubjectRepo subjectRepo, IUtilityRepo utilityRepo)
 		{
 			_studentRepo = studentRepo;
 			_subjectRepo = subjectRepo;
+			_utilityRepo = utilityRepo;
 		}
 
 		public async Task<IActionResult> Index()
@@ -25,7 +28,8 @@ namespace ETicketBooking.UI.Controllers
 				studentListViewModels.Add(new StudentListViewModel
 				{
 					Id = student.Id,
-					Name = student.Name
+					Name = student.Name,
+					ProfileImageUrl = student.ProfileImageUrl
 				});
 			}
 			return View(studentListViewModels);
@@ -55,6 +59,11 @@ namespace ETicketBooking.UI.Controllers
 			{
 				Name = vm.Name
 			};
+			if (vm.ImagePath != null)
+			{
+				student.ProfileImageUrl = await _utilityRepo.SaveImagePath(StudentImage, vm.ImagePath);
+			}
+
 			var selectedSubjectIds = vm.SubjectList.Where(x => x.IsChecked).Select(x => x.Id).ToList();
 			foreach (var subjectId in selectedSubjectIds)
 			{
@@ -77,6 +86,7 @@ namespace ETicketBooking.UI.Controllers
 			var vm = new StudentViewModel();
 			vm.Name = student.Name;
 			vm.Id = student.Id;
+			vm.ProfileImage = student.ProfileImageUrl;
 			foreach (var subject in subjects)
 			{
 				vm.SubjectList.Add(new CheckBoxTable
@@ -96,6 +106,10 @@ namespace ETicketBooking.UI.Controllers
 			var student = await _studentRepo.GetById(vm.Id);
 			var existingSubjectIds = student.StudentSubjects.Select(x => x.SubjectId).ToList();
 			student.Name = vm.Name;
+			if (vm.ImagePath != null)
+			{
+				student.ProfileImageUrl = await _utilityRepo.EditFilePath(StudentImage, vm.ImagePath, student.ProfileImageUrl);
+			}
 
 			var selectedSubjectIds = vm.SubjectList.Where(x => x.IsChecked).Select(x => x.Id).ToList();
 
@@ -122,7 +136,9 @@ namespace ETicketBooking.UI.Controllers
 		[HttpGet]
 		public async Task<IActionResult> Delete(int id)
 		{
+			var student = await _studentRepo.GetById(id);
 			await _studentRepo.Delete(id);
+			await _utilityRepo.DeleteFile(student.ProfileImageUrl, StudentImage);
 			return RedirectToAction("Index");
 		}
 	}
