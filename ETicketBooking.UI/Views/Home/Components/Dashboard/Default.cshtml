@@ -1,0 +1,28 @@
+﻿@model Dashboard
+
+<div class="row">
+	<div class="col-3">
+		<div class="dashboard-tile">
+			<div class="metric">
+				<p class="number">@Model.TotalEmployee</p>
+				<p class="label">Number of Employees</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-3">
+		<div class="dashboard-tile">
+			<div class="metric">
+				<p class="number">@Model.TotalDepartment</p>
+				<p class="label">Number of Departments</p>
+			</div>
+		</div>
+	</div>
+	<div class="col-3">
+		<div class="dashboard-tile">
+			<div class="metric">
+				<p class="number">@Model.TotalStudent</p>
+				<p class="label">Number of Students</p>
+			</div>
+		</div>
+	</div>
+</div>
