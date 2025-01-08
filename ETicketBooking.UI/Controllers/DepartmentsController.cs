@@ -40,6 +40,7 @@ namespace ETicketBooking.UI.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(CreateDepartmentViewModel vm)
 		{
 			if (ModelState.IsValid)

@@ -37,9 +37,7 @@
                 <img src="@item.ProfileImageUrl" style="width: 100px;height: 100px;border-radius: 50%;"/>
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                <partial name="_actionlinks" model="@item.Id"/>
             </td>
         </tr>
 }
