@@ -1,4 +1,5 @@
-﻿using ETicketBooking.Entities;
+﻿using AutoMapper;
+using ETicketBooking.Entities;
 using ETicketBooking.Repositories.Interfaces;
 using ETicketBooking.UI.ViewModels.DepartmentViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -8,26 +9,31 @@ namespace ETicketBooking.UI.Controllers
 	public class DepartmentsController : Controller
 	{
 		private readonly IDepartmentRepo _departmentRepo;
+		private readonly IMapper _mapper;
 
-		public DepartmentsController(IDepartmentRepo departmentRepo)
+		public DepartmentsController(IDepartmentRepo departmentRepo, IMapper mapper)
 		{
 			_departmentRepo = departmentRepo;
+			_mapper = mapper;
 		}
 
 		public async Task<IActionResult> Index()
 		{
 			if (HttpContext.Session.GetInt32("userId") != null)
 			{
-				List<DepartmentViewModel> departmentViewModels = new List<DepartmentViewModel>();
+				//List<DepartmentViewModel> departmentViewModels = new List<DepartmentViewModel>();
 				var departments = await _departmentRepo.GetAll();
-				foreach (var department in departments)
-				{
-					departmentViewModels.Add(new DepartmentViewModel
-					{
-						Id = department.Id,
-						Name = department.Name
-					});
-				}
+
+				var departmentViewModels = _mapper.Map<List<DepartmentViewModel>>(departments);
+
+				//foreach (var department in departments)
+				//{
+				//	departmentViewModels.Add(new DepartmentViewModel
+				//	{
+				//		Id = department.Id,
+				//		Name = department.Name
+				//	});
+				//}f
 				return View(departmentViewModels);
 			}
 			return RedirectToAction("Login", "Auth");
@@ -45,10 +51,7 @@ namespace ETicketBooking.UI.Controllers
 		{
 			if (ModelState.IsValid)
 			{
-				var department = new Department
-				{
-					Name = vm.Name
-				};
+				var department = _mapper.Map<Department>(vm);
 				var record = await _departmentRepo.Insert(department);
 
 				if (record > 0)
@@ -69,22 +72,14 @@ namespace ETicketBooking.UI.Controllers
 		public async Task<IActionResult> Edit(int id)
 		{
 			var department = await _departmentRepo.GetById(id);
-			var vm = new DepartmentViewModel
-			{
-				Id = department.Id,
-				Name = department.Name
-			};
+			var vm = _mapper.Map<DepartmentViewModel>(department);
 			return View(vm);
 		}
 
 		[HttpPost]
 		public async Task<IActionResult> Edit(DepartmentViewModel vm)
 		{
-			var department = new Department
-			{
-				Id = vm.Id,
-				Name = vm.Name
-			};
+			var department = _mapper.Map<Department>(vm);
 			await _departmentRepo.Update(department);
 			return RedirectToAction("Index");
 		}

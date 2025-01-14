@@ -1,6 +1,7 @@
 using ETicketBooking.Repositories;
 using ETicketBooking.Repositories.Implementations;
 using ETicketBooking.Repositories.Interfaces;
+using ETicketBooking.UI.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,14 @@ builder.Services.AddScoped<IUserRepo, UserRepo>();
 builder.Services.AddScoped<IUtilityRepo, UtilityRepo>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+var config = new AutoMapper.MapperConfiguration(options =>
+{
+	options.AddProfile(new AutoMapperProfile());
+});
+var mapper = config.CreateMapper();
+builder.Services.AddSingleton(mapper);
+
 builder.Services.AddSession(option =>
 {
 	option.IdleTimeout = TimeSpan.FromSeconds(5);

@@ -1,33 +1,83 @@
-﻿using ETicketBooking.Entities;
+﻿using AutoMapper;
+using ETicketBooking.Entities;
 using ETicketBooking.Repositories.Implementations;
 using ETicketBooking.Repositories.Interfaces;
 using ETicketBooking.UI.ViewModels.SubjectViewModels;
+using ETicketBooking.UI.ViewModels.Utility;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ETicketBooking.UI.Controllers
 {
 	public class SubjectsController : Controller
 	{
+		private readonly IMapper _mapper;
 		private readonly ISubjectRepo _subjectRepo;
-		
-		public SubjectsController(ISubjectRepo subjectRepo)
+
+		public SubjectsController(ISubjectRepo subjectRepo, IMapper mapper)
 		{
 			_subjectRepo = subjectRepo;
+			_mapper = mapper;
 		}
 
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string sortOrder,
+			string currentFilter,
+			int pageNumber = 1,
+			int pageSize = 3,
+			string searchText = null)
 		{
-			List<SubjectViewModel> subjectViewModels = new List<SubjectViewModel>();
+			ViewData["CurrentSort"] = sortOrder;
+			ViewData["NameSortParam"] = string.IsNullOrEmpty(sortOrder) || sortOrder == "name_asc" ? "name_desc" : "name_asc";
+			ViewData["IdSortParam"] = sortOrder == "id_desc" ? "" : "id_desc";
 			var subjects = await _subjectRepo.GetAll();
-			foreach (var subject in subjects)
+			var totalItems = 0;
+			if (searchText != null)
 			{
-				subjectViewModels.Add(new SubjectViewModel
-				{
-					Id = subject.Id,
-					Name = subject.Name
-				});
+				pageNumber = 1;
+
+			} 
+			else
+			{
+				searchText = currentFilter;
 			}
-			return View(subjectViewModels);
+			ViewData["CurrentFilterData"] = searchText;
+
+
+			if (!string.IsNullOrEmpty(searchText))
+			{
+				subjects = subjects.Where(x => x.Name.Contains(searchText));
+			}
+
+			totalItems = subjects.ToList().Count();
+
+			switch (sortOrder)
+			{
+				case "name_desc": subjects = subjects.OrderByDescending(x => x.Name); 
+					break;
+				case "name_asc": subjects = subjects.OrderBy(x => x.Name);
+					break;
+				case "id_desc": subjects = subjects.OrderByDescending(x => x.Id);
+					break;
+				default: subjects = subjects.OrderBy(x => x.Id);
+					break;
+			}
+
+
+			subjects = subjects.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+			var subjectViewModels = _mapper.Map<List<SubjectViewModel>>(subjects);
+
+			var pagedSubjectViewModel = new PagedSubjectViewModel
+			{
+				SubjectViewModelList = subjectViewModels,
+				PageInfo = new PageInfo
+				{
+					TotalItems = totalItems,
+					PageNumber = pageNumber,
+					PageSize = pageSize,
+				}
+			};
+
+			return View(pagedSubjectViewModel);
 		}
 
 		[HttpGet]
